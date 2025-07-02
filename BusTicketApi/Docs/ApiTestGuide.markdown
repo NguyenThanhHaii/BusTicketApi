@@ -20,7 +20,7 @@ This document provides a comprehensive guide to test all APIs in the BusTicketAp
     ```json
     {
         "username": "admin",
-        "password": "password123"
+        "password": "admin@123"
     }
     ```
 - **Expected Result**: `200 OK`
@@ -58,13 +58,13 @@ This document provides a comprehensive guide to test all APIs in the BusTicketAp
   - Use existing username (e.g., `"username": "admin"`): `400 Bad Request`.
   - No token or invalid token: `401 Unauthorized`.
 
-## 3. Bus Management API (/api/Buses)
+## 3. Bus Management API (/api/Bus)
 
-### 3.1. Test `GET /api/Buses`
+### 3.1. Test `GET /api/Bus`
 - **Description**: Retrieve list of buses (Admin only).
 - **Request**:
   - Method: `GET`
-  - URL: `http://localhost:7112/api/Buses`
+  - URL: `http://localhost:7112/api/Bus`
   - Header: `Authorization: Bearer <token>`
 - **Expected Result**: `200 OK`
   ```json
@@ -75,11 +75,11 @@ This document provides a comprehensive guide to test all APIs in the BusTicketAp
   ```
 - **Error Test**: No token or invalid token: `401 Unauthorized`.
 
-### 3.2. Test `POST /api/Buses`
+### 3.2. Test `POST /api/Bus`
 - **Description**: Create a new bus (Admin only).
 - **Request**:
   - Method: `POST`
-  - URL: `http://localhost:7112/api/Buses`
+  - URL: `http://localhost:7112/api/Bus`
   - Header: `Authorization: Bearer <token>`
   - Body: `raw` (JSON)
     ```json
@@ -93,13 +93,13 @@ This document provides a comprehensive guide to test all APIs in the BusTicketAp
 - **Expected Result**: `201 Created` with new bus details.
 - **Error Test**: Invalid data (e.g., negative `totalSeats`): `400 Bad Request`.
 
-## 4. Route Management API (/api/Routes)
+## 4. Route Management API (/api/Route)
 
-### 4.1. Test `GET /api/Routes`
+### 4.1. Test `GET /api/Route`
 - **Description**: Retrieve list of routes (Admin only).
 - **Request**:
   - Method: `GET`
-  - URL: `http://localhost:7112/api/Routes`
+  - URL: `http://localhost:7112/api/Route`
   - Header: `Authorization: Bearer <token>`
 - **Expected Result**: `200 OK`
   ```json
@@ -110,11 +110,11 @@ This document provides a comprehensive guide to test all APIs in the BusTicketAp
   ```
 - **Error Test**: No token: `401 Unauthorized`.
 
-### 4.2. Test `POST /api/Routes`
+### 4.2. Test `POST /api/Route`
 - **Description**: Create a new route (Admin only).
 - **Request**:
   - Method: `POST`
-  - URL: `http://localhost:7112/api/Routes`
+  - URL: `http://localhost:7112/api/Route`
   - Header: `Authorization: Bearer <token>`
   - Body: `raw` (JSON)
     ```json
@@ -129,27 +129,27 @@ This document provides a comprehensive guide to test all APIs in the BusTicketAp
 - **Expected Result**: `201 Created` with new route details.
 - **Error Test**: Invalid data (e.g., negative `basePrice`): `400 Bad Request`.
 
-## 5. Employee Management API (/api/Employees)
+## 5. Employee Management API (/api/Employee)
 
-### 5.1. Test `GET /api/Employees`
+### 5.1. Test `GET /api/Employee`
 - **Description**: Retrieve list of employees (Admin only).
 - **Request**:
   - Method: `GET`
-  - URL: `http://localhost:7112/api/Employees`
+  - URL: `http://localhost:7112/api/Employee`
   - Header: `Authorization: Bearer <token>`
 - **Expected Result**: `200 OK`
   ```json
   [
-      {"employeeId": 100000, "username": "admin", "role": "Admin", ...}
+      {"employeeId": 100000, "username": "admin", "role": "Admin"}
   ]
   ```
 - **Error Test**: No token: `401 Unauthorized`.
 
-### 5.2. Test `POST /api/Employees`
+### 5.2. Test `POST /api/Employee`
 - **Description**: Create a new employee (Admin only).
 - **Request**:
   - Method: `POST`
-  - URL: `http://localhost:7112/api/Employees`
+  - URL: `http://localhost:7112/api/Employee`
   - Header: `Authorization: Bearer <token>`
   - Body: `raw` (JSON)
     ```json
@@ -217,49 +217,53 @@ This document provides a comprehensive guide to test all APIs in the BusTicketAp
 - **Expected Result**: `201 Created` with new seat list.
 - **Error Test**: Duplicate seat numbers: `400 Bad Request`.
 
-## 7. Booking Management API (/api/Bookings)
+## 7. Booking Management API (/api/Booking)
 
-### 7.1. Test `POST /api/Bookings`
+### 7.1. Test `POST /api/Booking`
 - **Description**: Create a new booking (Employee only).
 - **Request**:
   - Method: `POST`
-  - URL: `http://localhost:7112/api/Bookings`
+  - URL: `http://localhost:7112/api/Booking`
   - Header: `Authorization: Bearer <token>` (use Employee token, e.g., `jane.smith`)
-  - Body: `raw` (JSON)
-    ```json
-    {
-        "employeeId": 100002,
-        "bookingDate": "2025-07-03T12:00:00",
-        "customerDetails": {
-            "name": "Frank Miller",
-            "dateOfBirth": "1987-09-20",
-            "email": "frank.miller@example.com",
-            "phoneNumber": "312-555-7890"
-        },
-        "seatInTripId": 2
-    }
-    ```
+    - Body: `raw` (JSON)
+      ```json
+      {
+          "details": [
+              {
+                  "seatInTripId": 3,
+                  "name": "John Smith",
+                  "dateOfBirth": "1995-03-10",
+                  "email": "john.smith@example.com",
+                  "phoneNumber": "212-555-9876"
+              },
+              {
+                  "seatInTripId": 2,
+                  "customerId": 2
+              }
+        ]
+      }
+      ```
 - **Expected Result**: `201 Created` with new booking details (e.g., `{"bookingId": 6, ...}`).
 - **Error Test**:
   - Non-existent `seatInTripId` (e.g., 999): `400 Bad Request`.
   - Invalid `employeeId`: `400 Bad Request`.
 
-### 7.2. Test `PUT /api/Bookings/{id}/cancel`
+### 7.2. Test `PUT /api/Booking/{id}/cancel`
 - **Description**: Cancel an existing booking (Employee only).
 - **Request**:
   - Method: `PUT`
-  - URL: `http://localhost:7112/api/Bookings/1/cancel`
+  - URL: `http://localhost:7112/api/Booking/1/cancel`
   - Header: `Authorization: Bearer <token>` (Employee token)
 - **Expected Result**: `200 OK` with cancellation details (e.g., `{"message": "Booking cancelled successfully", "refundAmount": 45.00}`).
 - **Error Test**:
   - Non-existent `bookingId` (e.g., 999): `404 Not Found`.
   - Already cancelled booking: `400 Bad Request`.
 
-### 7.3. Test `GET /api/Bookings/{id}/ticket`
+### 7.3. Test `GET /api/Booking/{id}/ticket`
 - **Description**: Generate a PDF ticket (Employee only).
 - **Request**:
   - Method: `GET`
-  - URL: `http://localhost:7112/api/Bookings/1/ticket`
+  - URL: `http://localhost:7112/api/Booking/1/ticket`
   - Header: `Authorization: Bearer <token>` (Employee token)
 - **Expected Result**: `200 OK` with PDF file (e.g., `Ticket_1.pdf`).
 - **Error Test**:
