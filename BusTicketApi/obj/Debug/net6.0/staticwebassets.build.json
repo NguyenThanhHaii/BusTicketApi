@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "HdRYoy5GcTg43lOiWCaOpYFK3KbNWiEt3jsJkQWzl9w=",
+  "Source": "BusTicketApi",
+  "BasePath": "_content/BusTicketApi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
